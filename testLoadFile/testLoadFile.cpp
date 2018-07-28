@@ -8,7 +8,7 @@ void testLoadFile::loadFileTest(){
 
     Q_ASSERT(file.exists());                //testa se il file di test esiste
 
-    auto list = FileHandler::loadFileToList(file,nullptr);
+    auto list = FileHandler::loadFileToList(file);
 
     Q_ASSERT(list.size()==3);               //testa se ha letto 3 righe, e saltati quella non valida e l'accapo
 
@@ -16,4 +16,4 @@ void testLoadFile::loadFileTest(){
 
 
 
-QTEST_MAIN(testLoadFile)
+QTEST_MAIN(testLoadFile);

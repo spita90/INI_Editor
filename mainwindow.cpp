@@ -6,14 +6,13 @@
 #include "ui_mainwindow.h"
 #include "invalidrowexception.h"
 #include "ioexception.h"
+#include "FileHandler.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent),
         ui(new Ui::MainWindow) {
     ui->setupUi(this);
-    _usingTable = false;
-
 }
 
 
@@ -46,66 +45,12 @@ void MainWindow::on_btn_load_clicked() {
 
         if (fileName.isEmpty())
             return;
+
         else {
 
             QFile file(fileName);
-            try {
-                if (!file.open(QIODevice::ReadOnly)) {
-                    QString err("Impossibile aprire il file");
-                    throw IOException(err);
-                }
-            }
-            catch (IOException &e) {
-                QMessageBox::information(this, e.getInfo(),
-                                         file.errorString());
-            }
 
-            QList<Entry *> list;                            //lista Template di puntatori a Entry (classe astratta)
-
-            while (!file.atEnd()) {
-                try {
-                    QString row = file.readLine();              //leggo ogni riga e decido il tipo di Entry da creare
-                    //Section, Comment, e Parameter sono derivate di Entry
-                    if (row == "\n") {
-                        // ignora i ritorni a capo
-                    } else {
-
-                        if (row[0] == "[") {
-                            if (row.contains("]"))                  //controllo correttezza notazione
-
-                                list.append(new Section(row));
-
-                            else {
-                                QString err("Riscontrata sezione con notazione errata");
-                                throw InvalidRowException(err);
-                            }
-                        } else if (row[0] == ";")
-
-                            list.append(new Comment(row));
-
-                        else {
-                            QString param = row.section("=", 0,
-                                                        0);  //per i parametri tutto ciò a sx del primo "=" va nel Campo
-                            QString value = row.section("=",
-                                                        1);            //tutto il resto (anche ulteriori "=") va nel Valore
-
-                            if (value.size() > 0)                                   //controllo correttezza notazione
-                                list.append(new Parameter(param, value));
-                            else {
-                                QString err("Riscontrata riga con notazione errata");
-                                throw InvalidRowException(err);
-                            }
-
-                        }
-                    }
-                }
-
-                catch (InvalidRowException &e) {
-                    std::cout << e.getInfo().toStdString();
-                    QMessageBox::information(this, tr("Righe con errori "),
-                                             "Riscontrate righe con errori: sono state saltate");
-                }
-            }
+            auto list = FileHandler::loadFileToList(file);
 
             initTable(ui, list.size());
 
@@ -127,7 +72,6 @@ void MainWindow::on_btn_load_clicked() {
             on_btn_load_clicked();
         }
     }
-
 }
 
 void MainWindow::on_btn_save_clicked() {
@@ -138,32 +82,12 @@ void MainWindow::on_btn_save_clicked() {
 
     if (fileName.isEmpty())
         return;
-    else {
 
+    else {
         QFile file(fileName);
 
-        try {
-            if (!file.open(QIODevice::WriteOnly)) {
-                QString err("Impossibile salvare il file");
-                throw IOException(err);
-            }
-        }
-        catch (IOException &e) {
-            QMessageBox::information(this, e.getInfo(),
-                                     file.errorString());
-        }
-        QTextStream out(&file);
+        FileHandler::saveTableToFile(ui->table,file);
 
-        for (int i = 0; i < ui->table->rowCount(); i++) {
-
-            QString item = ui->table->item(i, 0)->text();
-
-            if (item[0] == "[" || item[0] == ";") {
-                out << item;
-            } else {
-                out << item + "=" + ui->table->item(i, 1)->text();
-            }
-        }
     }
 }
 
@@ -209,6 +133,7 @@ void MainWindow::on_btn_remove_clicked() {
         if (ok) {
             ui->table->removeRow(row - 1);
         }
+
     } else {
 
         QMessageBox::information(this, tr("Tabella vuota"), "La tabella è già vuota!");
