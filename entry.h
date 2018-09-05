@@ -9,7 +9,7 @@ class Entry
 public:
     Entry() = default;
 
-    virtual void show(QTableWidget* table, int row)=0;
+    virtual void show(QTableWidget* table, int row)=0;          //pure virtual method of this abstract class
 
 protected:
     QTableWidgetItem* _item{};

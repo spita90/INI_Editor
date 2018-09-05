@@ -24,7 +24,8 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    FileHandler.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -33,7 +34,8 @@ HEADERS += \
         parameter.h \
         section.h \
     invalidrowexception.h \
-    ioexception.h
+    ioexception.h \
+    FileHandler.h
 
 FORMS += \
         mainwindow.ui

@@ -10,7 +10,7 @@ public:
         _item = new QTableWidgetItem(text);
     }
 
-    void show(QTableWidget* table, int row)override{
+    void show(QTableWidget* table, int row)override{        //override of the pure virtual inherited method
         table->setItem(row,0,_item);
         table->setSpan(row,0,1,2);
     }

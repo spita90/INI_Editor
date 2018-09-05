@@ -18,6 +18,8 @@ add_executable(INI_Editor
         section.h
         ui_mainwindow.h
         invalidrowexception.h
-        ioexception.h)
+        ioexception.h
+        FileHandler.cpp
+        FileHandler.h)
 
 target_link_libraries(INI_Editor Qt5::Widgets)

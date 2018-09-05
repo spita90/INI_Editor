@@ -34,9 +34,9 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    bool _usingTable;                               //used to know if table is in use or not
+    bool _usingTable=false;                               //used to know if table is in use or not
 
-    void initTable(Ui::MainWindow* ui, int rows=1);
+    void initTable(Ui::MainWindow* ui, int rows=1);       //private method with default argument
 };
 
 #endif // MAINWINDOW_H

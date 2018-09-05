@@ -3,14 +3,19 @@
 
 
 void testLoadFile::loadFileTest(){
-    QString filename = "TEST_FILE_input.ini";     //è un file con 3 righe valide, una riga non valida, e un accapo
+    QString filename = "TEST_FILE_input.ini";           //which is a file with 3 valid lines, one invalid line, and a "new line" line
     QFile file(filename);
 
-    Q_ASSERT(file.exists());                //testa se il file di test esiste
+    Q_ASSERT(file.exists());                            //test if file exists
 
-    auto list = FileHandler::loadFileToList(file,nullptr);
+    QList<Entry *> list;
 
-    Q_ASSERT(list.size()==3);               //testa se ha letto 3 righe, e saltati quella non valida e l'accapo
+    try{
+    FileHandler::loadFileToList(file, list);            //using static function: FileHandler class is never istantiated
+    }
+    catch(...){}
+
+    Q_ASSERT(list.size()==3);                           //test if it actually read 3 lines, and skipped the invalid and the "new line" ones
 
 };
 

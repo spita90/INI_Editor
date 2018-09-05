@@ -11,13 +11,13 @@ public:
         _value = new QTableWidgetItem(value);
     }
 
-    void show(QTableWidget* table, int row)override{
+    void show(QTableWidget* table, int row)override{        //override of the pure virtual inherited method
         table->setItem(row,0,_item);
         table->setItem(row,1,_value);
     }
 
 private:
-    QTableWidgetItem* _value;
+    QTableWidgetItem* _value;           //the parameter goes into the protected inherited _item, and the value goes into the private _value
 
 
 };
