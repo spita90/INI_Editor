@@ -8,7 +8,7 @@ void testEditTable::editTableTest(){
     QString filename = "TEST_FILE_edit.ini";
     QFile file(filename);
 
-    Q_ASSERT(file.exists());              //test if file exists
+    QVERIFY(file.exists());              //test if file exists
 
 
     QTableWidget table;                         //create new table
@@ -16,7 +16,7 @@ void testEditTable::editTableTest(){
 
     auxLoad(file, &table, list);
 
-    Q_ASSERT(table.item(2,1)->text()=="valore1");           //I check if the third line has "valore1" as its value
+    QVERIFY(table.item(2,1)->text()=="valore1");           //I check if the third line has "valore1" as its value
 
     table.setItem(2,1,new QTableWidgetItem("valore2"));     //I replace "valore1" with "valore2" in the table
 
@@ -24,7 +24,7 @@ void testEditTable::editTableTest(){
 
     auxLoad(file, &table, list);                            //now I load the saved file again in the table
 
-    Q_ASSERT(table.item(2,1)->text()=="valore2");           //and check if instead of "valore1" now it has "valore2"
+    QVERIFY(table.item(2,1)->text()=="valore2");           //and check if instead of "valore1" now it has "valore2"
 
 
 

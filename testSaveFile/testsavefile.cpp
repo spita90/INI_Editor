@@ -6,7 +6,7 @@ void testSaveFile::saveFileTest(){
     QString filename = "TEST_FILE_output.ini";
     QFile file_write(filename);
 
-    Q_ASSERT(file_write.exists());              //test if file exists
+    QVERIFY(file_write.exists());              //test if file exists
 
 
     QTableWidget table;                         //create new table
@@ -20,7 +20,7 @@ void testSaveFile::saveFileTest(){
 
 
     QFile file_read(filename);
-    Q_ASSERT(file_read.size()==6);              //and verify that the file size is actually 6 bytes
+    QVERIFY(file_read.size()==6);              //and verify that the file size is actually 6 bytes
 
 
     file_write.open(QIODevice::WriteOnly);      //reset the file for future tests.
