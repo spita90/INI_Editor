@@ -5,10 +5,10 @@
 
 
 void testEditTable::editTableTest(){
-    QString filename = "TEST_FILE_edit.ini";
+    QString filename = "TEST_FILE_edit.ini";    //this file has an invalid line for exception test purposes
     QFile file(filename);
 
-    QVERIFY(file.exists());              //test if file exists
+    QVERIFY(file.exists());                     //test if file exists
 
 
     QTableWidget table;                         //create new table
@@ -16,24 +16,28 @@ void testEditTable::editTableTest(){
 
     auxLoad(file, &table, list);
 
-    QVERIFY(table.item(2,1)->text()=="valore1");           //I check if the third line has "valore1" as its value
+    QVERIFY(table.item(2,1)->text()=="valore1\n");          //I check if the third line has "valore1" as its value
 
     table.setItem(2,1,new QTableWidgetItem("valore2"));     //I replace "valore1" with "valore2" in the table
 
-    FileHandler::saveTableToFile(&table, file);             //and save the table to the file
+    FileHandler::saveTableToFile(&table, file);
+
+    file.open(QIODevice::WriteOnly | QIODevice::Append);    //I manually add again an invalid line
+    file.write("\nRIGA_NON_VALIDA\n");                      //because saveTableToFile doesn't save invalid lines
+    file.close();                                           //and finally save the file
 
     auxLoad(file, &table, list);                            //now I load the saved file again in the table
 
-    QVERIFY(table.item(2,1)->text()=="valore2");           //and check if instead of "valore1" now it has "valore2"
+    QVERIFY(table.item(2,1)->text()=="valore2\n");          //and check if instead of "valore1" now it has "valore2"
 
 
 
 
     table.setItem(2,1,new QTableWidgetItem("valore1"));     //I reset the table to its original state
-
     FileHandler::saveTableToFile(&table, file);             //and save the file for future tests.
-
-
+    file.open(QIODevice::WriteOnly | QIODevice::Append);
+    file.write("\nRIGA_NON_VALIDA\n");
+    file.close();
 
 };
 
@@ -42,18 +46,8 @@ void testEditTable::auxLoad(QFile& file, QTableWidget* table, QList <Entry*>& li
 
     list = {};
 
-    try {
-        FileHandler::loadFileToList(
-                file, list);      //using static function: FileHandler class is never istantiated
-    }
+    QVERIFY_EXCEPTION_THROWN(FileHandler::loadFileToList(file, list),InvalidRowException);  //test if it actually throws an exception because of the invalid line
 
-    catch (IOException &e) {
-        std::cout << e.getInfo().toStdString();
-    }
-
-    catch (InvalidRowException &e) {
-        std::cout << e.getInfo().toStdString();
-    }
 
     table->setRowCount(list.size());
     table->setColumnCount(2);

@@ -1,5 +1,6 @@
 #include "testloadfile.h"
 #include "../FileHandler.h"
+#include "../invalidrowexception.h"
 
 
 void testLoadFile::loadFileTest(){
@@ -10,12 +11,9 @@ void testLoadFile::loadFileTest(){
 
     QList<Entry *> list;
 
-    try{
-    FileHandler::loadFileToList(file, list);            //using static function: FileHandler class is never istantiated
-    }
-    catch(...){}
+    QVERIFY_EXCEPTION_THROWN(FileHandler::loadFileToList(file, list),InvalidRowException);  //test if it actually throws an exception because of the invalid line
 
-    QVERIFY(list.size()==3);                           //test if it actually read 3 lines, and skipped the invalid and the "new line" ones
+    QVERIFY(list.size()==3);                           //test if it actually read 3 valid lines, and skipped the "new line" line
 
 };
 
