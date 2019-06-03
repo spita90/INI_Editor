@@ -1,5 +1,5 @@
 # INI_Editor
-INI_Editor is a simple GUI program that lets you open and edit INI configuration files. 
+INI_Editor is a simple C++ GUI program that lets you open and edit INI configuration files. 
 
 It is written in C++ and it's open-source, so it can be modified by anyone using QtCreator or CLion.
 
